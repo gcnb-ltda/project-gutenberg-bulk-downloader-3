@@ -1,16 +1,18 @@
-name: Import Project Gutenberg generated TXT - Part 3
+name: Import Project Gutenberg TXT - Part 3
 
 on:
   workflow_dispatch:
   push:
     paths:
       - '.github/workflows/import-generated-txt.yml'
+      - 'import_generated_txt.sh'
+      - 'txt-continuation-state.json'
 
 permissions:
   contents: write
 
 concurrency:
-  group: gutenberg-txt-import
+  group: gutenberg-txt-import-part-3
   cancel-in-progress: false
 
 jobs:
@@ -36,6 +38,7 @@ jobs:
 
       - name: Import next TXT batch
         env:
+          RSYNC_SOURCE: 'gutenberg.pglaf.org::gutenberg'
           RUN_TARGET_MIB: '2500'
           REPO_TARGET_GIB: '8'
           MAX_FILE_MIB: '90'
