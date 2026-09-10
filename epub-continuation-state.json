@@ -1,8 +1,0 @@
-{
-  "collection": "Project Gutenberg generated EPUB without images",
-  "rsync_source": "gutenberg.pglaf.org::gutenberg-epub",
-  "last_path": "",
-  "total_bytes_repo": 0,
-  "total_files_repo": 0,
-  "complete": false
-}
