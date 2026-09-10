@@ -1,7 +1,7 @@
 {
-  "collection": "Project Gutenberg generated TXT",
+  "collection": "Project Gutenberg main TXT",
   "last_id": 0,
   "total_bytes_repo": 0,
   "total_files_repo": 0,
-  "complete": true
+  "complete": false
 }
