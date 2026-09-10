@@ -1,0 +1,47 @@
+name: Import Project Gutenberg generated TXT - Part 3
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gutenberg-txt-import
+  cancel-in-progress: false
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Install rsync
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y rsync
+
+      - name: Import next TXT batch
+        env:
+          RUN_TARGET_MIB: '2500'
+          REPO_TARGET_GIB: '8'
+          MAX_FILE_MIB: '90'
+          PUSH_BATCH_MIB: '400'
+        run: |
+          chmod +x import_generated_txt.sh
+          ./import_generated_txt.sh
+
+      - name: Show TXT checkpoint
+        if: always()
+        run: |
+          test -f txt-continuation-state.json && cat txt-continuation-state.json || true
