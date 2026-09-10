@@ -2,11 +2,6 @@ name: Import Project Gutenberg TXT - Part 3
 
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - '.github/workflows/import-generated-txt.yml'
-      - 'import_generated_txt.sh'
-      - 'txt-continuation-state.json'
 
 permissions:
   contents: write
@@ -31,10 +26,10 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Install rsync
+      - name: Install requirements
         run: |
           sudo apt-get update
-          sudo apt-get install -y rsync
+          sudo apt-get install -y rsync python3 coreutils
 
       - name: Import next TXT batch
         env:
