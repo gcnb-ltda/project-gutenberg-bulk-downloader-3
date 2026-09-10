@@ -2,6 +2,9 @@ name: Import Project Gutenberg generated TXT - Part 3
 
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/import-generated-txt.yml'
 
 permissions:
   contents: write
