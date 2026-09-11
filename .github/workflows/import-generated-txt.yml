@@ -2,12 +2,16 @@ name: Import Project Gutenberg TXT - Part 3
 
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/import-generated-txt.yml'
+      - 'import_generated_txt.sh'
 
 permissions:
   contents: write
 
 concurrency:
-  group: gutenberg-txt-import-part-3
+  group: gutenberg-canonical-mirror-part-3
   cancel-in-progress: false
 
 jobs:
@@ -26,23 +30,29 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Install requirements
+      - name: Free runner disk space
+        run: |
+          set -euxo pipefail
+          sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL || true
+          sudo apt-get clean || true
+          df -h
+
+      - name: Install archive tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y rsync python3 coreutils
+          sudo apt-get install -y unzip curl python3 coreutils
 
-      - name: Import next TXT batch
+      - name: Mirror canonical TXT from validated master archive
         env:
-          RSYNC_SOURCE: 'gutenberg.pglaf.org::gutenberg'
-          RUN_TARGET_MIB: '2500'
+          RUN_TARGET_MIB: '2000'
           REPO_TARGET_GIB: '8'
           MAX_FILE_MIB: '90'
-          PUSH_BATCH_MIB: '400'
+          PUSH_BATCH_MIB: '180'
         run: |
           chmod +x import_generated_txt.sh
           ./import_generated_txt.sh
 
-      - name: Show TXT checkpoint
+      - name: Show canonical mirror checkpoint
         if: always()
         run: |
           test -f txt-continuation-state.json && cat txt-continuation-state.json || true
